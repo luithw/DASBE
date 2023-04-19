@@ -39,14 +39,14 @@ with h5py.File(os.path.join(data_dir, 'MNIST.hdf5'), 'r') as f:
 
 def generate_mnist_shape_img(digit_nr, nr_shapes=1, test=False):
     if digit_nr is None:
-        img = np.zeros((28, 28), dtype=np.float)
+        img = np.zeros((28, 28), dtype=float)
     elif not test:
-        img = (mnist_digits[digit_nr].reshape(28, 28) > 0.5).astype(np.float)
+        img = (mnist_digits[digit_nr].reshape(28, 28) > 0.5).astype(float)
     else:
-        img = (mnist_digits_test[digit_nr].reshape(28, 28) > 0.5).astype(np.float)
+        img = (mnist_digits_test[digit_nr].reshape(28, 28) > 0.5).astype(float)
     
     
-    grp = (img > 0.5).astype(np.float)
+    grp = (img > 0.5).astype(float)
     mask = grp.copy()
     k = 2
     

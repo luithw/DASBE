@@ -8,7 +8,7 @@ if __name__ == "__main__":
     net_name = sys.argv[1]
     dataset_name = sys.argv[2]
 
-    net = torch.load('./dasbe/tmp_net/' + net_name) 
+    net = torch.load('./dasbe/tmp_net/' + net_name, map_location=torch.device('cpu')) 
 
     _, multi, _, _, multi_label, _ = gain_dataset("./dasbe/tmp_data", dataset_name)
 

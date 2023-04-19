@@ -29,7 +29,7 @@ def generate_bars(width, height, nr_horizontal_bars, nr_vertical_bars):
         img: result image
         grp: mask matrix with 1 been selected; 0, not selected
     """
-    img = np.zeros((height, width), dtype=np.float)
+    img = np.zeros((height, width), dtype=float)
     grp = np.zeros_like(img)
     
     idx_vert = np.random.choice(np.arange(width), replace=False, size=nr_vertical_bars)
@@ -64,7 +64,7 @@ def generate_bars_with_T(width, height, nr_horizontal_bars, nr_vertical_bars,
         img: result image
         grp: mask matrix with 1 been selected; 0, not selected
     """
-    imgs = np.zeros((T, height, width), dtype=np.float)  
+    imgs = np.zeros((T, height, width), dtype=float)  
     grps = np.zeros_like(imgs) 
 
     if (np.random.rand() >= 0.5 and nr_vertical_bars > 0) or nr_horizontal_bars == 0:
@@ -76,7 +76,7 @@ def generate_bars_with_T(width, height, nr_horizontal_bars, nr_vertical_bars,
         nr_horizontal_bars -= 1
         nr_horizontal_bars = max(nr_horizontal_bars, 0)
     
-    img = np.zeros((height, width), dtype=np.float)
+    img = np.zeros((height, width), dtype=float)
     grp = np.zeros_like(img)
     
     idx_vert = np.random.choice(np.arange(width), replace=False, size=nr_vertical_bars)
@@ -149,7 +149,6 @@ if __name__ == "__main__":
     
     shuffel_idx = np.arange(nr_single_examples)
     np.random.shuffle(shuffel_idx)
-    print(shuffel_idx)
     single_data = single_data[shuffel_idx, :]
     single_grps = single_grps[shuffel_idx, :]
 

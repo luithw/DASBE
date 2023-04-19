@@ -39,6 +39,11 @@ def STP(M,s):
     return M
 
 
+def imshow(x):
+    plt.imshow(x, cmap='gray')
+    plt.show()
+
+
 def clustering(x, bestnet, labels, cortical_delay=29, iterations=30, s_refractory=9, a_refractory=9, hidden_size=[40, 40]):
     net = bestnet
     W = x.shape[0]
@@ -48,6 +53,8 @@ def clustering(x, bestnet, labels, cortical_delay=29, iterations=30, s_refractor
     f = torch.zeros((W, H), device=device)
     context_input = torch.abs(torch.randn((cortical_delay, W, H), device=device)) # gamma
     context_input /= context_input.sum(0)
+    # the context input acts as a queue,
+    # each time step one gets popped from the front and one gets pushed to the back
     new_context_input = torch.zeros((cortical_delay, W, H), device=device)
     spike_record = []
     context_record = []
@@ -65,14 +72,22 @@ def clustering(x, bestnet, labels, cortical_delay=29, iterations=30, s_refractor
             mem = x * context_input[t]
             noise = torch.rand(s.size(), device=device)
             f -= 1
+            
+            # spike if activity is more than one and refractory period is over
             s = torch.where(((mem+noise) > Vth) & (f < 0), 1, 0).type(dtype=torch.float32)
+            # update refractory period for the neurons that spiked
             f = torch.where(s > 0, s_refractory * torch.ones((W, H), device=device), f).type(dtype=torch.float32)
 
+            # accumulate all spikes over the last 3 time steps, same as logical OR operation
             accumulate_input = torch.where(s+s_pre+s_prre > 0, 1, 0)
 
+            # feed the accumulated spikes to the denoising autoencoder
+            # returns the denoised outputs and the latent variables
             output, encoding, _ = net(accumulate_input.reshape(1, -1).type(dtype=torch.float32), refractory=a_refractory)
 
+            # randomly "forget" half of the spikes, this results in 75% of the spikes being forgotten
             s_prre = s_pre * torch.tensor(np.random.choice([0, 1], s.shape, p=[0.5, 0.5]), device=device)
+            # randomly "forget" half of the spikes
             s_pre = s * torch.tensor(np.random.choice([0, 1], s.shape, p=[0.5, 0.5]), device=device)
             new_context_input[t, :, :] = output.reshape(W,H) 
             
@@ -124,7 +139,7 @@ if __name__ == "__main__":
     net_name = sys.argv[1]
     dataset_name = sys.argv[2]
 
-    net = torch.load('./dasbe/tmp_net/' + net_name) 
+    net = torch.load('./dasbe/tmp_net/' + net_name, map_location=device) 
 
     _, multi, _, _, multi_label, _ = gain_dataset("./dasbe/tmp_data", dataset_name)
 
