@@ -1,4 +1,4 @@
-# Dance of SNN and ANN: Solving binding problem by combining spike timing and reconstructive attentio
+# Dance of SNN and ANN: Solving binding problem by combining spike timing and reconstructive attention
 
 This repository is the code for the paper *Dance of SNN and ANN: Solving binding problem by combining spike timing and reconstructive attention.* It can reproduce the main results of the paper.
 
