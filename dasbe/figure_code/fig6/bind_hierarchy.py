@@ -112,7 +112,7 @@ def draw_step_wise_analysis(grp,syn,r,clr):
     plt.ylim((-1, 1))
     plt.show()
 
-net = torch.load('../../tmp_net/shape_clrnet_spikes_batch_net4.pty')
+net = torch.load('../../tmp_net/shape_clrnet_spikes_batch_net4.pty', map_location=device)
 
 _, multi, _, _, multi_label, _ = gain_dataset("../../tmp_data", "shapes")
 

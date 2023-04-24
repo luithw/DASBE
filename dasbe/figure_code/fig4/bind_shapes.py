@@ -121,7 +121,7 @@ def draw_step_wise_analysis(grp,syn,r,clr):
     plt.show()
 
 
-net = torch.load('../../tmp_net/shapes_dae_0.8_400_net2.pty')
+net = torch.load('../../tmp_net/shapes_dae_0.8_400_net2.pty', map_location=device)
 
 _, multi, _, _, multi_label, _ = gain_dataset("../../tmp_data", "shapes")
 
